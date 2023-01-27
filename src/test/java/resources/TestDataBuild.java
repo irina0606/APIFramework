@@ -1,8 +1,8 @@
 package resources;
 
 
-import cucumber.pogo.AddPlace;
-import cucumber.pogo.Location;
+import pojo.AddPlace;
+import pojo.Location;
 
 import java.util.ArrayList;
 import java.util.List;

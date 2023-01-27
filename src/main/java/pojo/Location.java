@@ -1,4 +1,4 @@
-package cucumber.pogo;
+package pojo;
 
 public class Location {
 

@@ -11,7 +11,7 @@ Feature: Validating Place APIs
     And Verify place_id created maps to "<name>" using "getPlaceAPI"
 
     Examples:
-      |name    |language     | address
+      | name   | language    | address
       | AAA    | English     | Florida
       | BBB    | Spanish     | Mexico
       | CCC    | Mandarin    | China

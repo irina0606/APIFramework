@@ -1,6 +1,5 @@
-package cucumber.stepDefinitions;
+package stepDefinitions;
 
-import cucumber.stepDefinitions.StepDef;
 import io.cucumber.java.Before;
 
 import java.io.IOException;

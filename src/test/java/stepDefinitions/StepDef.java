@@ -1,18 +1,21 @@
-package cucumber.stepDefinitions;
+package stepDefinitions;
 
-import resources.APIResources;
-import resources.TestDataBuild;
-import resources.Utils;
+
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import io.restassured.RestAssured;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.junit.Assert;
+import resources.APIResources;
+import resources.TestDataBuild;
+import resources.Utils;
 
 import java.io.IOException;
 
@@ -22,7 +25,7 @@ import static org.junit.Assert.*;
 public class StepDef extends Utils {
 
     TestDataBuild data = new TestDataBuild();
-    ResponseSpecification respspec;
+    ResponseSpecification respSpec;
     RequestSpecification mainRequest;
     Response response;
     static String placeID;
@@ -38,33 +41,34 @@ public class StepDef extends Utils {
     public void userCallsWithHttpRequest(String resource, String method) {
 
         APIResources resourceAPI = APIResources.valueOf(resource);
-        System.out.println(resourceAPI.getResource());
+        System.out.println("++++++++++++++     " + resourceAPI.getResource());
 
-        respspec = new ResponseSpecBuilder()
+        respSpec = new ResponseSpecBuilder()
                 .expectStatusCode(200)
                 .expectContentType(ContentType.JSON)
                 .build();
 
+
         if(method.equalsIgnoreCase("POST"))
             response = mainRequest.when().post(resourceAPI.getResource());
-        if (method.equalsIgnoreCase("GET"))
+        else if (method.equalsIgnoreCase("GET"))
             response = mainRequest.when().get(resourceAPI.getResource());
-        if (method.equalsIgnoreCase("DELETE"))
+        else if (method.equalsIgnoreCase("DELETE"))
             response = mainRequest.when().delete(resourceAPI.getResource());
-        if (method.equalsIgnoreCase("PUT"))
+        else if (method.equalsIgnoreCase("PUT"))
             response = mainRequest.when().put(resourceAPI.getResource());
     }
 
     @Then("User gets response status code {int}")
     public void userGetsResponseStatusCode(int arg0) {
 
-        assertEquals(response.getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusCode(), 200);
     }
 
     @And("{string} in response body is {string}")
     public void inResponseBodyIs(String keyValue, String expectedValue) {
 
-        assertEquals(getJsonPath(response, keyValue), expectedValue);
+        Assert.assertEquals(getJsonPath(response, keyValue), expectedValue);
 
     }
 
@@ -75,13 +79,13 @@ public class StepDef extends Utils {
         mainRequest = given().spec(requestSpecification()).queryParam("place_id", placeID);
         userCallsWithHttpRequest(resource, "GET");
         String actualName = getJsonPath(response, "name");
-        assertEquals(actualName, expectedName);
+        Assert.assertEquals(actualName, expectedName);
 
     }
 
     @Given("Delete Place Payload")
     public void deletePlacePayload() throws IOException {
 
-        mainRequest = given().spec(requestSpecification()).body(data.deletePlacePayLoad(placeID));
+        mainRequest = RestAssured.given().spec(requestSpecification()).body(data.deletePlacePayLoad(placeID));
     }
 }
